@@ -1,5 +1,11 @@
 {
-    "database": {
-        "uri": "mongodb://eflowdb:dev2018@ds155292.mlab.com:55292/eflow"
+    "baseCurrency": "BRL",
+    "acceptedCurrencies": ["USD", "EUR", "ARS"],
+    "currencyApi": {
+        "url": "https://api.exchangeratesapi.io/history",
+        "startDateParam": "start_at",
+        "endDateParam": "end_at",
+        "originCurrencyParam": "symbols",
+        "destinyCurrencyParam": "base"
     }
 }
