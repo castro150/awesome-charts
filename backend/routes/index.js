@@ -9,6 +9,6 @@ module.exports = function (app) {
 		res.send('Awesome Charts Server is running!');
 	});
 
-    app.use('/api', router);
-    app.use('/api/v1/rates', ratesRouter);
+	app.use('/api', router);
+	app.use('/api/v1/rates', ratesRouter);
 };
