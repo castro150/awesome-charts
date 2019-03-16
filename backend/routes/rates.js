@@ -27,7 +27,7 @@ router.get('/', function (req, res, next) {
 	}
 
 	let endAt = req.query.date;
-	let startAt = moment(endAt, 'YYYY-MM-DD').subtract(1, 'week').format('YYYY-MM-DD');
+	let startAt = moment(endAt, 'YYYY-MM-DD').subtract(9, 'days').format('YYYY-MM-DD');
 
 	let url = `${CURRENCY_API.url}` +
 		`?${CURRENCY_API.startDateParam}=${startAt}` +
