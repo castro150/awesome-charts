@@ -1,6 +1,6 @@
 {
     "baseCurrency": "BRL",
-    "acceptedCurrencies": ["USD", "EUR", "ARS"],
+    "acceptedCurrencies": ["USD", "EUR", "GBP"],
     "currencyApi": {
         "url": "https://api.exchangeratesapi.io/history",
         "startDateParam": "start_at",

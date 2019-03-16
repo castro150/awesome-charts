@@ -27,7 +27,7 @@ router.get('/', function (req, res, next) {
 	}
 
 	let endAt = req.query.date;
-	let startAt = moment(endAt, 'YYYY-MM-DD').subtract(9, 'days').format('YYYY-MM-DD');
+	let startAt = moment(endAt, 'YYYY-MM-DD').subtract(1, 'week').format('YYYY-MM-DD');
 
 	let url = `${CURRENCY_API.url}` +
 		`?${CURRENCY_API.startDateParam}=${startAt}` +
@@ -36,7 +36,25 @@ router.get('/', function (req, res, next) {
 		`&${CURRENCY_API.destinyCurrencyParam}=${req.query.currency}`;
 
 	return axios.get(url)
-		.then(response => res.json(response.data))
+		.then(response => {
+			const days = Object.keys(response.data.rates).sort();
+			days.some(day => {
+				let momentDay = moment(day, 'YYYY-MM-DD');
+				if (momentDay.isoWeekday() === 5) {
+					const saturday = momentDay.add(1, 'day').format('YYYY-MM-DD');
+					const sunday = momentDay.add(1, 'day').format('YYYY-MM-DD');
+					response.data.rates[saturday] = response.data.rates[day];
+					response.data.rates[sunday] = response.data.rates[day];
+					return true;
+				}
+
+				return false;
+			});
+
+			const newDays = Object.keys(response.data.rates).sort();
+			if (newDays.length > 7) delete response.data.rates[newDays[0]];
+			return res.json(response.data);
+		})
 		.catch(err => next(err));
 });
 

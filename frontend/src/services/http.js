@@ -4,11 +4,8 @@ import moment from 'moment';
 export default {
   async getRateData(currency, date) {
     const fomartedDate = moment(date).format('YYYY-MM-DD');
-    const result = await axios.get(`http://localhost:3000/api/v1/rates?date=${fomartedDate}&currency=${currency}`);
+    const result = await axios.get(`http://${__configs.achartsServer}/api/v1/rates?date=${fomartedDate}&currency=${currency}`);
 
-    console.error(fomartedDate);
-    console.error(result.data);
-
-    return result;
+    return result.data;
   },
 };

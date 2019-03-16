@@ -1,37 +1,12 @@
 <template>
-  <div class="hello">
+  <div class="chart">
+    <h1>Awesome Chart!</h1>
     <highcharts :constructor-type="'stockChart'" :options="chartOptions"></highcharts>
-    <h1>{{ msg }}</h1>
-    <p>
-      For a guide and recipes on how to configure / customize this project,<br>
-      check out the
-      <a href="https://cli.vuejs.org" target="_blank" rel="noopener">vue-cli documentation</a>.
-    </p>
-    <h3>Installed CLI Plugins</h3>
-    <ul>
-      <li><a href="https://github.com/vuejs/vue-cli/tree/dev/packages/%40vue/cli-plugin-babel" target="_blank" rel="noopener">babel</a></li>
-      <li><a href="https://github.com/vuejs/vue-cli/tree/dev/packages/%40vue/cli-plugin-eslint" target="_blank" rel="noopener">eslint</a></li>
-    </ul>
-    <h3>Essential Links</h3>
-    <ul>
-      <li><a href="https://vuejs.org" target="_blank" rel="noopener">Core Docs</a></li>
-      <li><a href="https://forum.vuejs.org" target="_blank" rel="noopener">Forum</a></li>
-      <li><a href="https://chat.vuejs.org" target="_blank" rel="noopener">Community Chat</a></li>
-      <li><a href="https://twitter.com/vuejs" target="_blank" rel="noopener">Twitter</a></li>
-      <li><a href="https://news.vuejs.org" target="_blank" rel="noopener">News</a></li>
-    </ul>
-    <h3>Ecosystem</h3>
-    <ul>
-      <li><a href="https://router.vuejs.org" target="_blank" rel="noopener">vue-router</a></li>
-      <li><a href="https://vuex.vuejs.org" target="_blank" rel="noopener">vuex</a></li>
-      <li><a href="https://github.com/vuejs/vue-devtools#vue-devtools" target="_blank" rel="noopener">vue-devtools</a></li>
-      <li><a href="https://vue-loader.vuejs.org" target="_blank" rel="noopener">vue-loader</a></li>
-      <li><a href="https://github.com/vuejs/awesome-vue" target="_blank" rel="noopener">awesome-vue</a></li>
-    </ul>
   </div>
 </template>
 
 <script>
+import moment from 'moment';
 import Highcharts from 'highcharts';
 import stockInit from 'highcharts/modules/stock';
 import http from '../services/http';
@@ -49,38 +24,45 @@ export default {
     return {
       chartOptions: {
 
-        series: [{
-          name: 'series 1 name',
-          data: [1, -1, 2, 3, 3, 3, 3],
-          pointStart: Date.now(),
-          pointInterval: 1000 * 3600 * 24,
-          tooltip: {
-            valueDecimals: 2,
-          },
-        }, {
-          name: 'series 2 name',
-          data: [-2, -1, 1, 2, 2, 2, 2],
-          pointStart: Date.now(),
-          pointInterval: 1000 * 3600 * 24,
-          tooltip: {
-            valueDecimals: 2,
-          },
-        }, {
-          name: 'series 3 name',
-          data: [1, 1, 3, 3, 3, 3, 3],
-          pointStart: Date.now(),
-          pointInterval: 1000 * 3600 * 24,
-          tooltip: {
-            valueDecimals: 2,
-          },
-        }],
+        series: [],
 
       },
     };
   },
 
-  created() {
-    http.getRateData('USD', Date.now());
+  methods: {
+    addSeries(currency, date, data) {
+      const days = Object.keys(data.rates).sort();
+      const firstDay = days[0];
+
+      const newSerie = {
+        name: currency,
+        data: [],
+        pointStart: moment(firstDay, 'YYYY-MM-DD').startOf('day').toDate().getTime(),
+        pointInterval: 1000 * 3600 * 24,
+        tooltip: {
+          // eslint-disable-next-line
+          pointFormat: '<span style="color:{series.color}">{series.name}</span>: <b>${point.y}</b><br/>',
+          valueDecimals: 2,
+        },
+      };
+
+      days.forEach(day => newSerie.data.push(data.rates[day].BRL));
+      this.chartOptions.series.push(newSerie);
+    },
+  },
+
+  async created() {
+    this.today = Date.now();
+
+    http.getRateData('USD', this.today)
+      .then(usdRate => this.addSeries('USD', this.today, usdRate));
+
+    http.getRateData('EUR', this.today)
+      .then(eurRate => this.addSeries('EUR', this.today, eurRate));
+
+    http.getRateData('GBP', this.today)
+      .then(gbpRate => this.addSeries('GBP', this.today, gbpRate));
   },
 };
 </script>
@@ -100,5 +82,9 @@ li {
 }
 a {
   color: #42b983;
+}
+.chart {
+  margin-right: 20%;
+  margin-left: 20%;
 }
 </style>
