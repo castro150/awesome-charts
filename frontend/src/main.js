@@ -1,6 +1,8 @@
 /* eslint-disable */
 import Vue from 'vue';
 import HighchartsVue from 'highcharts-vue';
+import Buefy from 'buefy'
+import 'buefy/dist/buefy.css'
 
 import App from './App.vue';
 
@@ -11,6 +13,7 @@ global.__configs = {
 };
 
 Vue.use(HighchartsVue);
+Vue.use(Buefy);
 
 new Vue({
   render: h => h(App),
