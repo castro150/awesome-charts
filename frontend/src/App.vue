@@ -1,17 +1,17 @@
 <template>
   <div id="app">
-    <hello-world msg="Welcome to Your Vue.js App"/>
+    <chart />
   </div>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue';
+import Chart from './components/Chart.vue';
 
 export default {
   name: 'app',
 
   components: {
-    HelloWorld,
+    Chart,
   },
 };
 </script>

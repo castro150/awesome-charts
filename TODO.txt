@@ -1,5 +1,0 @@
-Criar readme no backend
-Ajustar validação do backend
-Renomear component do frontend
-Limpar frontend
-Externalizar URL da API em config no front

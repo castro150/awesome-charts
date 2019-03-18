@@ -25,7 +25,7 @@ import http from '../services/http';
 stockInit(Highcharts);
 
 export default {
-  name: 'HelloWorld',
+  name: 'Chart',
 
   props: {
     msg: String,
